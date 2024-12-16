@@ -2,7 +2,6 @@
 #include "BoardGame_Classes.h"
 using namespace std;
 
-// Define the smaller Tic Tac Toe board
 class SmallBoard : public Board<char> {
 public:
     SmallBoard() {
@@ -11,7 +10,7 @@ public:
         for (int i = 0; i < rows; ++i) {
             board[i] = new char[columns];
             for (int j = 0; j < columns; ++j) {
-                board[i][j] = ' '; // Initialize empty cells
+                board[i][j] = ' ';
             }
         }
     }
@@ -26,9 +25,9 @@ public:
     }
 
     void display_board() override {
-        cout << "    0   1   2" << endl; // Column numbering
+        cout << "    0   1   2" << endl;
         for (int i = 0; i < rows; ++i) {
-            cout << i << " | "; // Row numbering
+            cout << i << " | ";
             for (int j = 0; j < columns; ++j) {
                 cout << board[i][j];
                 if (j < columns - 1) cout << " | ";
@@ -43,7 +42,6 @@ public:
     }
 
     bool is_win() override {
-        // Check rows, columns, and diagonals for a winner
         for (int i = 0; i < rows; ++i) {
             if (board[i][0] != ' ' && board[i][0] == board[i][1] && board[i][1] == board[i][2])
                 return true;
@@ -68,7 +66,6 @@ public:
     }
 };
 
-// Define the Ultimate Tic Tac Toe board
 class UltimateBoard : public Board<char> {
 private:
     SmallBoard* subBoards[3][3];
@@ -80,14 +77,14 @@ public:
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < columns; ++j) {
                 subBoards[i][j] = new SmallBoard();
-                mainBoard[i][j] = ' '; // Initialize main board as empty
+                mainBoard[i][j] = ' ';
             }
         }
     }
 
     bool update_board(int x, int y, char symbol) override {
-        int subX = x / 3, subY = y / 3; // Determine which sub-board
-        int localX = x % 3, localY = y % 3; // Local coordinates within the sub-board
+        int subX = x / 3, subY = y / 3;
+        int localX = x % 3, localY = y % 3;
 
         if (subBoards[subX][subY]->update_board(localX, localY, symbol)) {
             if (subBoards[subX][subY]->is_win() && mainBoard[subX][subY] == ' ') {
@@ -99,11 +96,11 @@ public:
     }
 
     void display_board() override {
-        cout << "          0   1   2   3   4   5   6   7   8" << endl; // Global column numbering
+        cout << "          0   1   2   3   4   5   6   7   8" << endl;
         cout << "        -------------------------------------" << endl;
         for (int subX = 0; subX < rows; ++subX) {
             for (int localRow = 0; localRow < 3; ++localRow) {
-                cout << subX * 3 + localRow << " | "; // Row numbering for ultimate board
+                cout << subX * 3 + localRow << " | ";
                 for (int subY = 0; subY < columns; ++subY) {
                     for (int localCol = 0; localCol < 3; ++localCol) {
                         cout << subBoards[subX][subY]->get_cell(localRow, localCol);
@@ -118,7 +115,6 @@ public:
     }
 
     bool is_win() override {
-        // Check rows, columns, and diagonals for a winner
         for (int i = 0; i < rows; ++i) {
             if (mainBoard[i][0] != ' ' && mainBoard[i][0] == mainBoard[i][1] && mainBoard[i][1] == mainBoard[i][2])
                 return true;
@@ -148,7 +144,6 @@ public:
     }
 };
 
-// Define a concrete player class
 class HumanPlayer : public Player<char> {
 public:
     HumanPlayer(string n, char s) : Player<char>(n, s) {}
@@ -159,7 +154,6 @@ public:
     }
 };
 
-// Main function
 int main() {
     UltimateBoard board;
     Player<char>* players[2] = { new HumanPlayer("Player 1", 'X'), new HumanPlayer("Player 2", 'O') };
